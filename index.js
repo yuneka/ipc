@@ -49,7 +49,7 @@ class IPC extends EventEmitter {
         this.destroy(new Error('ERR_IPC_CHANNEL_CLOSED'));
     }
 
-    async _emit (name, ...args) {
+    _emit (name, ...args) {
         super.emit(name, ...args)
     }
 
