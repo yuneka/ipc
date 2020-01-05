@@ -40,13 +40,17 @@ class IPC extends EventEmitter {
     }
 
     _errorHandler (err) {
-        super.emit('error', err);
+        this._emit('error', err);
         this.destroy(err);
     }
 
     _disconnectHandler (packet) {
-        super.emit('disconnect');
+        this._emit('disconnect');
         this.destroy(new Error('ERR_IPC_CHANNEL_CLOSED'));
+    }
+
+    async _emit (name, ...args) {
+        super.emit(name, ...args)
     }
 
     async _exec (name, args) {
@@ -64,7 +68,7 @@ class IPC extends EventEmitter {
         // console.log('got packet', packet)
         if (packet.type === 'event') {
             if (!this.closed) {
-                super.emit(packet.event, ...packet.args)
+                this._emit(packet.event, ...packet.args)
             }
         } else if (packet.type === 'call') {
             if (this.closed) {
